@@ -1,4 +1,4 @@
-/* Covid 19 Data Exploration 
+/* Covid-19 Data Exploration using SQL
 
 Skills used: Joins, Windows Functions, Aggregate Functions, Creating Views, LIKE Operator, IS NOT NULL operator
 */
