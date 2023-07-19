@@ -1,3 +1,9 @@
+/* Covid 19 Data Exploration 
+
+Skills used: Joins, Windows Functions, Aggregate Functions, Creating Views, LIKE Operator, IS NOT NULL operator
+*/
+
+
 /* table creation coviddeaths*/
 
 create table coviddeaths (
@@ -28,7 +34,8 @@ weekly_icu_admissions_per_million float,
 weekly_hosp_admissions float,
 weekly_hosp_admissions_per_million float
 );
-	
+
+
 /* import table coviddeaths*/
 
 COPY coviddeaths(iso_code,continent,location,date,population,total_cases,new_cases,new_cases_smoothed,total_deaths,new_deaths,	
@@ -39,6 +46,7 @@ weekly_hosp_admissions_per_million)
 FROM 'D:\Desktop\Data analyst\SQL\Covid 19\coviddeaths.csv'
 DELIMITER ','
 CSV HEADER;
+
 
 /* table creation covidvaccinations*/
 
@@ -89,6 +97,7 @@ excess_mortality_cumulative float,
 excess_mortality float,
 excess_mortality_cumulative_per_million float
 );
+
 
 /* import table covidvaccinations*/
 
@@ -142,9 +151,11 @@ excess_mortality_cumulative_per_million
 FROM 'D:\Desktop\Data analyst\SQL\Covid 19\covidvaccinations.csv'
 DELIMITER ','
 CSV HEADER;
- 
+
+
 select * from  covidvaccinations;
 select * from coviddeaths;
+
 
 /* Looking at Total Cases vs Total Deaths*/
 /* Shows likelihood of dying if you contract covid in your country.*/
@@ -167,6 +178,7 @@ select location, date,population,total_cases,(total_cases/population)*100 as Per
 from coviddeaths 
 where location='India' and continent is not null and total_cases is not null
 order by 1,2;
+
 
 /* Looking at Countries with Highest Infection Rate compared to Population*/
 
@@ -195,6 +207,7 @@ where continent is not null
 group by continent
 order by HighestDeathCount desc;
 
+
 /* Global Numbers*/
 Showing New Deaths and New Cases
 
@@ -203,6 +216,7 @@ from coviddeaths
 where continent is not null
 group by date
 order by date;
+
 
 /* Global New Death percentage in relation to new cases  */
 select date, sum(new_cases) as "TotalNewCases", sum(new_deaths) as "TotalNewDeaths", 
@@ -213,6 +227,7 @@ group by date
 having sum(new_cases) > 0
 order by 1;
 
+
 /* globally Covid-19 Cases, Death Cases and Death Percentage */
 select sum(new_cases) as "TotalNewCases", sum(new_deaths) as "TotalNewDeaths",
 sum(new_deaths) / sum(new_cases) *100 as "DeathPercentage"
@@ -222,16 +237,20 @@ where continent is not null;
 
 select * from coviddeaths;
 
+
 select date, location, hosp_patients, weekly_hosp_admissions 
 from coviddeaths
 where continent is not null;
 
+
 select * from covidvaccinations;
+
 
 /* Joining tables coviddeaths and covidvaccinations to get insights*/
 
 select * from coviddeaths as dea join covidvaccinations as vac on dea.location = vac.location
 and dea.date = vac.date;
+
 
 /* Total population vs vaccinations*/
 
@@ -243,6 +262,7 @@ where dea.continent is not null and new_vaccinations is not null
 group by dea.continent, dea.location, DATE_PART('Year', dea.date)
 order by 1,2;
 
+
 /* Create view to store data for later visualization*/
 
 create view TotalCases_vs_TotalDeaths as
@@ -251,11 +271,13 @@ from coviddeaths
 where location like '%States%' and continent is not null and total_cases is not null and total_deaths is not null
 order by 1,2;
 
+
 create view TotalCases_vs_Population as
 select location, date,population,total_cases,(total_cases/population)*100 as PercentPopulationInfected
 from coviddeaths 
 where location='India' and continent is not null and total_cases is not null
 order by 1,2;
+
 
 create view HighestInfectionRate_vs_Population as
 select location, population, max(total_cases) as HighestInfectionCount , 
