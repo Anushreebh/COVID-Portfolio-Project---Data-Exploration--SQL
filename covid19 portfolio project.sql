@@ -235,17 +235,6 @@ from coviddeaths
 where continent is not null;
 
 
-select * from coviddeaths;
-
-
-select date, location, hosp_patients, weekly_hosp_admissions 
-from coviddeaths
-where continent is not null;
-
-
-select * from covidvaccinations;
-
-
 /* Joining tables coviddeaths and covidvaccinations to get insights*/
 
 select * from coviddeaths as dea join covidvaccinations as vac on dea.location = vac.location
@@ -285,28 +274,3 @@ max((total_cases/population))* 100 as PercentPopulationInfected from coviddeaths
 where continent is not null and total_cases is not null
 group by location, population 
 order by PercentPopulationInfected desc;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
